@@ -210,7 +210,7 @@
                     >
                     <a
                       @click="handleLogout"
-                      class="cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       role="menuitem"
                       >Sign out</a
                     >
@@ -409,7 +409,7 @@ import getUser from "../composables/getUser";
 import useLogout from "../composables/useLogout";
 
 export default defineComponent({
-  name: "Entrance",
+  name: "UserCollections",
   setup() {
     const { error, logout } = useLogout();
     const { user } = getUser();
@@ -420,7 +420,7 @@ export default defineComponent({
     // Handle the logout and
     async function handleLogout() {
       await logout();
-      // redirect to '/' Login page
+      // redirect to '/' Home page
       if (!error.value) {
         console.log("SUCCESS:handleLogout");
         router.push({ name: "Login" });
@@ -433,3 +433,4 @@ export default defineComponent({
 </script>
 
 <style></style>
+

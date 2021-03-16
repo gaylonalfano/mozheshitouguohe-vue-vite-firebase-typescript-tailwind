@@ -6,11 +6,11 @@ import {
   NavigationGuardNext,
 } from "vue-router";
 
-// import { auth } from "@/firebase/config";
 import { auth } from "../firebase/config";
-// import Home from "@/views/Home.vue";
+import Signup from "../views/auth/Signup.vue";
+import Login from "../views/auth/Login.vue";
 import Home from "../views/Home.vue";
-import Dashboard from "../views/Dashboard.vue";
+import UserCollections from "../views/collections/UserCollections.vue";
 
 // Creating another Route Guard for Home page for logged-in users
 // They should be redirected to Dashboard if logged in already
@@ -24,10 +24,10 @@ function requireNoAuth(
   console.log("RouterGuard:requireNoAuth:user ", user);
 
   if (user) {
-    // Redirect to Dashboard route
-    next({ name: "Dashboard" });
+    // Redirect to Home route
+    next({ name: "Home" });
   } else {
-    // Let them through/continue to Home page
+    // Let them through/continue to Login page
     next();
   }
 }
@@ -50,47 +50,13 @@ function requireAuth(
   console.log("RouterGuard:requireAuth:user: ", user); // Works!
 
   if (!user) {
-    // Unauthorized (user is null) so send back to Home page
-    next({ name: "Home" });
+    // Unauthorized (user is null) so send back to Login page
+    next({ name: "Login" });
   } else {
     // Need to invoke next() to move forward
     next();
   }
 }
-
-// // === AMPLIFY Create a Route Guard for ADMIN Cognito User Group
-// async function requireAdmin(
-//   to: RouteLocationNormalized,
-//   from: RouteLocationNormalized,
-//   next: NavigationGuardNext
-// ) {
-//   // Grab current authenticated user's session accessToken info for groups
-//   const currentUser = await Auth.currentUserInfo();
-//   console.log("RouterGuard:requireAdmin:currentUser: ", currentUser);
-
-//   // Unauthenticated
-//   if (!currentUser) {
-//     // Unauthenticated (user is null) so send back to Login page
-//     next({ name: "Login" });
-//   }
-
-//   // Authenticated but not sure if Authorized for /admin
-//   if (currentUser) {
-//     const currentAuthUser = await Auth.currentAuthenticatedUser();
-//     const userGroups =
-//       currentAuthUser.signInUserSession.accessToken.payload["cognito:groups"];
-//     // console.log("userGroups", userGroups);
-//     // console.log(userGroups[0]);
-//     // console.log(userGroups.includes("admin")); // true
-//     if (userGroups && userGroups.includes("admin")) {
-//       // Authenticated + Authorized (admin)
-//       next();
-//     } else {
-//       // Authenticated only (not admin)
-//       next({ name: "Home" });
-//     }
-//   }
-// }
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -100,11 +66,23 @@ const routes: Array<RouteRecordRaw> = [
     // beforeEnter: requireNoAuth,
   },
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    component: Dashboard,
+    path: "/login",
+    name: "Login",
+    component: Login,
     // beforeEnter: requireNoAuth,
   },
+  {
+    path: "/signup",
+    name: "Signup",
+    component: Signup,
+    // beforeEnter: requireNoAuth,
+  },
+  // {
+  //   path: "/collections/user",
+  //   name: "UserCollections",
+  //   component: UserCollections,
+  //   // beforeEnter: requireNoAuth,
+  // },
 ];
 
 const router = createRouter({
