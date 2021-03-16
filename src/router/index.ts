@@ -10,7 +10,7 @@ import {
 import { auth } from "../firebase/config";
 // import Home from "@/views/Home.vue";
 import Home from "../views/Home.vue";
-import Entrance from "../views/Entrance.vue";
+import Dashboard from "../views/Dashboard.vue";
 
 // Creating another Route Guard for Home page for logged-in users
 // They should be redirected to Dashboard if logged in already
@@ -25,7 +25,7 @@ function requireNoAuth(
 
   if (user) {
     // Redirect to Dashboard route
-    next({ name: "Entrance" });
+    next({ name: "Dashboard" });
   } else {
     // Let them through/continue to Home page
     next();
@@ -100,9 +100,9 @@ const routes: Array<RouteRecordRaw> = [
     // beforeEnter: requireNoAuth,
   },
   {
-    path: "/entrance",
-    name: "Entrance",
-    component: Entrance,
+    path: "/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
     // beforeEnter: requireNoAuth,
   },
 ];

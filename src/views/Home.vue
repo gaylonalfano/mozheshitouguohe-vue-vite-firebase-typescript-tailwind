@@ -3,15 +3,15 @@
     class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
   >
     <div class="max-w-md w-full space-y-8">
-      <div>
+      <div class="max-h-28">
         <img
-          class="mx-auto h-12 w-auto"
-          src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+          class="object-cover h-40 w-full"
+          src="../assets/images/摸着石头过河-行云飞白体文字设计.png"
           alt="Workflow"
         />
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Campus Entry
-        </h2>
+        <!-- <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900"> -->
+        <!--   Campus Entry -->
+        <!-- </h2> -->
       </div>
       <div v-if="showLogin">
         <h3 class="mt-6 text-center text-xl font-bold text-gray-900">Log in</h3>
@@ -34,11 +34,11 @@
           Sign up
         </h3>
         <SignupForm @signup="enterDashboard" />
-        <div class="text-sm py-4 text-center">
+        <div class="py-4 text-sm text-center">
           <p>
             Already registered?
             <span
-              class="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
+              class="font-medium text-indigo-600 cursor-pointer hover:text-indigo-500"
               @click="showLogin = true"
             >
               Log in</span
@@ -54,9 +54,6 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
-// With alias @
-//import SignupForm from "@/components/SignupForm.vue";
-//import LoginForm from "@/components/LoginForm.vue";
 // Without alias:  https://github.com/rollup/plugins/issues/759
 import SignupForm from "../components/SignupForm.vue";
 import LoginForm from "../components/LoginForm.vue";
@@ -83,7 +80,7 @@ export default defineComponent({
       console.log("Home:enterDashboard:user: ", user);
       // console.log(context); // Nope. {expose: f}
       // console.log(context.attrs["user"]); // Nope. undefined
-      router.push({ name: "Entrance" });
+      router.push({ name: "Dashboard" });
       // Q: How to get the user details passed as well? Use context?
       // A: No! We still need to use Firebase methods to get the User, etc. but
       // A: we can then pass it as payload of context.emit('event', payload)
