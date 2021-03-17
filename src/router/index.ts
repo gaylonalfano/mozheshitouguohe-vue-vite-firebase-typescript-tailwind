@@ -10,6 +10,7 @@ import { auth } from "../firebase/config";
 import Signup from "../views/auth/Signup.vue";
 import Login from "../views/auth/Login.vue";
 import Home from "../views/Home.vue";
+import ToggleDemo from "../views/ToggleDemo.vue";
 import UserCollections from "../views/collections/UserCollections.vue";
 
 // Creating another Route Guard for Home page for logged-in users
@@ -76,6 +77,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "Signup",
     component: Signup,
     // beforeEnter: requireNoAuth,
+  },
+  {
+    path: "/toggle",
+    name: "ToggleDemo",
+    component: ToggleDemo,
   },
   // {
   //   path: "/collections/user",

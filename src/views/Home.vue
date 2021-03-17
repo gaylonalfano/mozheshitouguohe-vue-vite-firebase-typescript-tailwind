@@ -50,6 +50,7 @@
                 </div>
               </div>
             </div>
+            <!-- Search box -->
             <div class="flex justify-center flex-1 px-2 lg:ml-6 lg:justify-end">
               <div class="w-full max-w-lg lg:max-w-xs">
                 <label for="search" class="sr-only">Search</label>
@@ -85,6 +86,7 @@
             <div class="flex lg:hidden">
               <!-- Mobile menu button -->
               <button
+                @click="toggleMobileMenu"
                 type="button"
                 class="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                 aria-controls="mobile-menu"
@@ -97,9 +99,12 @@
                 Heroicon name: outline/menu
 
                 Menu open: "hidden", Menu closed: "block"
+
+                NOTE: Remove existing block or hidden class!
               -->
                 <svg
-                  class="block w-6 h-6"
+                  :class="mobileMenuOpen ? 'hidden' : 'block'"
+                  class="w-6 h-6"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -119,9 +124,12 @@
                 Heroicon name: outline/x
 
                 Menu open: "block", Menu closed: "hidden"
+                
+                NOTE: Remove existing block or hidden class!
               -->
                 <svg
-                  class="hidden w-6 h-6"
+                  :class="mobileMenuOpen ? 'block' : 'hidden'"
+                  class="w-6 h-6"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -140,6 +148,8 @@
             <div class="hidden lg:block lg:ml-4">
               <div class="flex items-center">
                 <button
+                  @click="toggleNotifications()"
+                  :class="{ 'bg-yellow-300': notificationsOpen }"
                   class="flex-shrink-0 p-1 text-gray-400 bg-gray-800 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                 >
                   <span class="sr-only">View notifications</span>
@@ -165,7 +175,12 @@
                 <div class="relative flex-shrink-0 ml-4">
                   <div>
                     <button
+                      @click="toggleDropdown()"
                       type="button"
+                      :class="{
+                        'transition ease-out duration-100': dropdownOpen,
+                        'transition ease-in duration-75': !dropdownOpen,
+                      }"
                       class="flex text-sm text-white bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                       id="user-menu"
                       aria-expanded="false"
@@ -175,22 +190,35 @@
                       <img
                         class="w-8 h-8 rounded-full"
                         src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixqx=CW4pSoYe68&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
+                        alt="Your avatar"
                       />
                     </button>
                   </div>
 
-                  <!--
-                  Dropdown menu, show/hide based on menu state.
+                  <!-- Adding another div for when user clicks outside of dropdown to also close -->
+                  <!-- https://github.com/wobsoriano/v-dashboard/blob/master/src/components/Header.vue -->
+                  <div
+                    v-show="dropdownOpen"
+                    @click="toggleDropdown()"
+                    class="fixed inset-0 z-10 w-full h-full"
+                  ></div>
 
-                  Entering: "transition ease-out duration-100"
+                  <!--
+                    Dropdown menu, show/hide based on menu state.
+
+                    Entering: "transition ease-out duration-100"
                     From: "transform opacity-0 scale-95"
                     To: "transform opacity-100 scale-100"
-                  Leaving: "transition ease-in duration-75"
+                    Leaving: "transition ease-in duration-75"
                     From: "transform opacity-100 scale-100"
                     To: "transform opacity-0 scale-95"
-                -->
+                  -->
                   <div
+                    v-show="dropdownOpen"
+                    :class="{
+                      'transition ease-out duration-500': dropdownOpen,
+                      'transition ease-in duration-75': !dropdownOpen,
+                    }"
                     class="absolute right-0 w-48 py-1 mt-2 bg-white shadow-lg origin-top-right rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none"
                     role="menu"
                     aria-orientation="vertical"
@@ -210,7 +238,7 @@
                     >
                     <a
                       @click="handleLogout"
-                      class="cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      class="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
                       role="menuitem"
                       >Sign out</a
                     >
@@ -222,7 +250,11 @@
         </div>
 
         <!-- Mobile menu, show/hide based on menu state. -->
-        <div class="border-b border-gray-700 md:hidden" id="mobile-menu">
+        <div
+          v-show="mobileMenuOpen"
+          class="border-b border-gray-700 md:hidden"
+          id="mobile-menu"
+        >
           <div class="px-2 pt-2 pb-3 space-y-1">
             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
             <a
@@ -235,16 +267,6 @@
               class="block px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md"
               >Collections</a
             >
-            <a
-              href="#"
-              class="block px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md"
-              >Projects</a
-            >
-            <a
-              href="#"
-              class="block px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md"
-              >Calendar</a
-            >
           </div>
           <div class="pt-4 pb-3 border-t border-gray-700">
             <div class="flex items-center px-5">
@@ -256,9 +278,11 @@
                 />
               </div>
               <div class="ml-3">
-                <div class="text-base font-medium text-white">Tom Cook</div>
+                <div class="text-base font-medium text-white">
+                  {{ user?.displayName }}
+                </div>
                 <div class="text-sm font-medium text-gray-400">
-                  tom@example.com
+                  {{ user?.email }}
                 </div>
               </div>
               <button
@@ -403,17 +427,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from "vue";
+import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import getUser from "../composables/getUser";
 import useLogout from "../composables/useLogout";
+import useToggle from "../composables/useToggle";
 
 export default defineComponent({
   name: "Entrance",
   setup() {
     const { error, logout } = useLogout();
     const { user } = getUser();
-    console.log(user.value);
+    //const [value, toggle] = useToggle();
+    // NOTE Can also rename the variables if you wish
+    const [dropdownOpen, toggleDropdown] = useToggle();
+    // Q: Can you import/declare multiple useToggle() for different toggles?
+    // A: Looks like I can as long as they names don't conflict
+    const [notificationsOpen, toggleNotifications] = useToggle();
+    // const isOpen = ref<boolean>(false);
+    // const toggleOpen = useToggle(isOpen); // RefImpl {}
+    // const toggleOpen = useToggle(isOpen.value); // false
+    const [mobileMenuOpen, toggleMobileMenu] = useToggle();
 
     const router = useRouter();
 
@@ -427,7 +461,17 @@ export default defineComponent({
       }
     }
 
-    return { error, handleLogout, user };
+    return {
+      error,
+      handleLogout,
+      user,
+      dropdownOpen,
+      toggleDropdown,
+      notificationsOpen,
+      toggleNotifications,
+      mobileMenuOpen,
+      toggleMobileMenu,
+    };
   },
 });
 </script>
