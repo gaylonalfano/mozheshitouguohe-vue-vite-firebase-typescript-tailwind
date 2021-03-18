@@ -19,6 +19,7 @@
     <div class="pb-32 bg-gray-800">
       <nav class="bg-gray-800">
         <!-- Remove the border here if I want continuous look. Keeping for mobile menu. -->
+        <!-- Only for LARGE screens -->
         <div class="px-2 mx-auto max-w-7xl sm:px-4 lg:px-8">
           <div
             class="relative flex items-center justify-between h-16 lg:border-gray-700 lg:border-opacity-25"
@@ -83,10 +84,11 @@
                 </div>
               </div>
             </div>
+            <!-- Only for SMALL/MEDIUM screens -->
             <div class="flex lg:hidden">
-              <!-- Mobile menu button -->
+              <!-- Mobile menu BUTTON! -->
               <button
-                @click="toggleMobileMenu"
+                @click="toggleDropdown"
                 type="button"
                 class="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                 aria-controls="mobile-menu"
@@ -103,7 +105,7 @@
                 NOTE: Remove existing block or hidden class!
               -->
                 <svg
-                  :class="mobileMenuOpen ? 'hidden' : 'block'"
+                  :class="dropdownOpen ? 'hidden' : 'block'"
                   class="w-6 h-6"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -128,7 +130,7 @@
                 NOTE: Remove existing block or hidden class!
               -->
                 <svg
-                  :class="mobileMenuOpen ? 'block' : 'hidden'"
+                  :class="dropdownOpen ? 'block' : 'hidden'"
                   class="w-6 h-6"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -145,6 +147,7 @@
                 </svg>
               </button>
             </div>
+            <!-- Only for LARGE screen. Profile Dropdown on LARGE screen. -->
             <div class="hidden lg:block lg:ml-4">
               <div class="flex items-center">
                 <button
@@ -171,16 +174,12 @@
                   </svg>
                 </button>
 
-                <!-- Profile dropdown -->
+                <!-- Profile dropdown on LARGE screen. -->
                 <div class="relative flex-shrink-0 ml-4">
                   <div>
                     <button
                       @click="toggleDropdown()"
                       type="button"
-                      :class="{
-                        'transition ease-out duration-100': dropdownOpen,
-                        'transition ease-in duration-75': !dropdownOpen,
-                      }"
                       class="flex text-sm text-white bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                       id="user-menu"
                       aria-expanded="false"
@@ -194,7 +193,6 @@
                       />
                     </button>
                   </div>
-
                   <!-- Adding another div for when user clicks outside of dropdown to also close -->
                   <!-- https://github.com/wobsoriano/v-dashboard/blob/master/src/components/Header.vue -->
                   <div
@@ -212,33 +210,32 @@
                     Leaving: "transition ease-in duration-75"
                     From: "transform opacity-100 scale-100"
                     To: "transform opacity-0 scale-95"
+
+                    NOTE: Make this z-index LOWER from backdrop/mask!
+                    Otherwise you can't click the modal elements!
                   -->
                   <div
                     v-show="dropdownOpen"
-                    :class="{
-                      'transition ease-out duration-500': dropdownOpen,
-                      'transition ease-in duration-75': !dropdownOpen,
-                    }"
-                    class="absolute right-0 w-48 py-1 mt-2 bg-white shadow-lg origin-top-right rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    class="z-20 absolute right-0 w-48 py-1 mt-2 bg-white shadow-lg origin-top-right rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none"
                     role="menu"
                     aria-orientation="vertical"
                     aria-labelledby="user-menu"
                   >
                     <a
                       href="#"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
                       role="menuitem"
                       >Your Profile</a
                     >
                     <a
                       href="#"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
                       role="menuitem"
                       >Settings</a
                     >
                     <a
                       @click="handleLogout"
-                      class="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
+                      class="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-200"
                       role="menuitem"
                       >Sign out</a
                     >
@@ -249,10 +246,11 @@
           </div>
         </div>
 
-        <!-- Mobile menu, show/hide based on menu state. -->
+        <!-- Mobile menu, show/hide based on menu state (ie. remove md:hidden). -->
         <div
-          v-show="mobileMenuOpen"
-          class="border-b border-gray-700 md:hidden"
+          v-show="dropdownOpen"
+          :class="dropdownOpen ? 'lg:hidden' : 'md:hidden'"
+          class="border-b border-gray-700"
           id="mobile-menu"
         >
           <div class="px-2 pt-2 pb-3 space-y-1">
@@ -326,84 +324,6 @@
             </div>
           </div>
         </div>
-        <!-- <div class="lg:hidden" id="mobile-menu"> -->
-        <!--   <div class="px-2 pt-2 pb-3 space-y-1"> -->
-        <!--     <!-1- Current: "bg-gray-700 text-white", Default: "text-white hover:bg-gray-500 hover:bg-opacity-75" -1-> -->
-        <!--     <a -->
-        <!--       href="#" -->
-        <!--       class="block px-3 py-2 text-base font-medium text-white bg-gray-900 rounded-md" -->
-        <!--     > -->
-        <!--       Dashboard -->
-        <!--     </a> -->
-
-        <!--     <a -->
-        <!--       href="#" -->
-        <!--       class="block px-3 py-2 text-base font-medium text-white hover:bg-gray-700 hover:bg-opacity-75 rounded-md" -->
-        <!--     > -->
-        <!--       Collections -->
-        <!--     </a> -->
-        <!--   </div> -->
-        <!--   <div class="pt-4 pb-3 border-t border-gray-700"> -->
-        <!--     <div class="flex items-center px-5"> -->
-        <!--       <div class="flex-shrink-0"> -->
-        <!--         <img -->
-        <!--           class="w-10 h-10 rounded-full" -->
-        <!--           src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixqx=CW4pSoYe68&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" -->
-        <!--           alt="" -->
-        <!--         /> -->
-        <!--       </div> -->
-        <!--       <div class="ml-3"> -->
-        <!--         <div class="text-base font-medium text-white">Tom Cook</div> -->
-        <!--         <div class="text-sm font-medium text-gray-300"> -->
-        <!--           tom@example.com -->
-        <!--         </div> -->
-        <!--       </div> -->
-        <!--       <button -->
-        <!--         class="flex-shrink-0 p-1 ml-auto text-gray-200 bg-gray-600 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-600 focus:ring-white" -->
-        <!--       > -->
-        <!--         <span class="sr-only">View notifications</span> -->
-        <!--         <!-1- Heroicon name: outline/bell -1-> -->
-        <!--         <svg -->
-        <!--           class="w-6 h-6" -->
-        <!--           xmlns="http://www.w3.org/2000/svg" -->
-        <!--           fill="none" -->
-        <!--           viewBox="0 0 24 24" -->
-        <!--           stroke="currentColor" -->
-        <!--           aria-hidden="true" -->
-        <!--         > -->
-        <!--           <path -->
-        <!--             stroke-linecap="round" -->
-        <!--             stroke-linejoin="round" -->
-        <!--             stroke-width="2" -->
-        <!--             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" -->
-        <!--           /> -->
-        <!--         </svg> -->
-        <!--       </button> -->
-        <!--     </div> -->
-        <!--     <div class="px-2 mt-3 space-y-1"> -->
-        <!--       <a -->
-        <!--         href="#" -->
-        <!--         class="block px-3 py-2 text-base font-medium text-white rounded-md hover:bg-gray-700 hover:bg-opacity-75" -->
-        <!--       > -->
-        <!--         Your Profile -->
-        <!--       </a> -->
-
-        <!--       <a -->
-        <!--         href="#" -->
-        <!--         class="block px-3 py-2 text-base font-medium text-white rounded-md hover:bg-gray-700 hover:bg-opacity-75" -->
-        <!--       > -->
-        <!--         Settings -->
-        <!--       </a> -->
-
-        <!--       <a -->
-        <!--         href="#" -->
-        <!--         class="block px-3 py-2 text-base font-medium text-white rounded-md hover:bg-gray-700 hover:bg-opacity-75" -->
-        <!--       > -->
-        <!--         Sign out -->
-        <!--       </a> -->
-        <!--     </div> -->
-        <!--   </div> -->
-        <!-- </div> -->
       </nav>
       <header class="py-10">
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -444,10 +364,10 @@ export default defineComponent({
     // Q: Can you import/declare multiple useToggle() for different toggles?
     // A: Looks like I can as long as they names don't conflict
     const [notificationsOpen, toggleNotifications] = useToggle();
+    //const [mobileMenuOpen, toggleMobileMenu] = useToggle();
     // const isOpen = ref<boolean>(false);
     // const toggleOpen = useToggle(isOpen); // RefImpl {}
     // const toggleOpen = useToggle(isOpen.value); // false
-    const [mobileMenuOpen, toggleMobileMenu] = useToggle();
 
     const router = useRouter();
 
@@ -469,8 +389,6 @@ export default defineComponent({
       toggleDropdown,
       notificationsOpen,
       toggleNotifications,
-      mobileMenuOpen,
-      toggleMobileMenu,
     };
   },
 });
