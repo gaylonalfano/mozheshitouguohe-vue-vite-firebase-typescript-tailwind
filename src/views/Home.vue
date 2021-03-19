@@ -34,20 +34,28 @@
               </div>
               <div class="hidden lg:block lg:ml-10">
                 <div class="flex space-x-4">
-                  <!-- Current: "bg-gray-900 text-white", Default: "text-white hover:bg-gray-500 hover:bg-opacity-75" -->
-                  <a
-                    href="#"
-                    class="px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-md"
+                  <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                  <router-link
+                    :to="{ name: 'Home' }"
+                    class="px-3 py-2 text-sm font-medium rounded-md"
+                    :class="[
+                      $route.name === 'Home' ? activeClass : inactiveClass,
+                    ]"
                   >
                     Dashboard
-                  </a>
+                  </router-link>
 
-                  <a
-                    href="#"
-                    class="px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:bg-opacity-75 hover:text-white rounded-md"
+                  <router-link
+                    :to="{ name: 'UserCollections' }"
+                    class="px-3 py-2 text-sm font-medium rounded-md"
+                    :class="[
+                      $route.name === 'UserCollections'
+                        ? activeClass
+                        : inactiveClass,
+                    ]"
                   >
                     Collections
-                  </a>
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -151,8 +159,6 @@
             <div class="hidden lg:block lg:ml-4">
               <div class="flex items-center">
                 <button
-                  @click="toggleNotifications()"
-                  :class="{ 'bg-yellow-300': notificationsOpen }"
                   class="flex-shrink-0 p-1 text-gray-400 bg-gray-800 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                 >
                   <span class="sr-only">View notifications</span>
@@ -216,29 +222,29 @@
                   -->
                   <div
                     v-show="dropdownOpen"
-                    class="z-20 absolute right-0 w-48 py-1 mt-2 bg-white shadow-lg origin-top-right rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    class="absolute right-0 z-20 w-48 py-1 mt-2 bg-white shadow-lg origin-top-right rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none"
                     role="menu"
                     aria-orientation="vertical"
                     aria-labelledby="user-menu"
                   >
-                    <a
-                      href="#"
+                    <router-link
+                      :to="{ name: 'Profile' }"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
                       role="menuitem"
-                      >Your Profile</a
+                      >Your Profile</router-link
                     >
-                    <a
-                      href="#"
+                    <router-link
+                      :to="{ name: 'Settings' }"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
                       role="menuitem"
-                      >Settings</a
+                      >Settings</router-link
                     >
-                    <a
+                    <span
                       @click="handleLogout"
                       class="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-200"
-                      role="menuitem"
-                      >Sign out</a
                     >
+                      Sign out
+                    </span>
                   </div>
                 </div>
               </div>
@@ -255,15 +261,15 @@
         >
           <div class="px-2 pt-2 pb-3 space-y-1">
             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-            <a
-              href="#"
+            <router-link
+              :to="{ name: 'Home' }"
               class="block px-3 py-2 text-base font-medium text-white bg-gray-900 rounded-md"
-              >Dashboard</a
+              >Dashboard</router-link
             >
-            <a
-              href="#"
+            <router-link
+              :to="{ name: 'UserCollections' }"
               class="block px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md"
-              >Collections</a
+              >Collections</router-link
             >
           </div>
           <div class="pt-4 pb-3 border-t border-gray-700">
@@ -306,21 +312,26 @@
               </button>
             </div>
             <div class="px-2 mt-3 space-y-1">
-              <a
-                href="#"
+              <router-link
+                :to="{ name: 'Profile' }"
                 class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700"
-                >Your Profile</a
+                >Your Profile</router-link
               >
-              <a
-                href="#"
+              <router-link
+                :to="{ name: 'Settings' }"
                 class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700"
-                >Settings</a
+                >Settings</router-link
               >
-              <a
-                href="#"
+              <!-- <router-link -->
+              <!--   class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700" -->
+              <!--   >Sign out</router-link -->
+              <!-- > -->
+              <button
+                @click="handleLogout"
                 class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700"
-                >Sign out</a
               >
+                Sign out
+              </button>
             </div>
           </div>
         </div>
@@ -363,11 +374,17 @@ export default defineComponent({
     const [dropdownOpen, toggleDropdown] = useToggle();
     // Q: Can you import/declare multiple useToggle() for different toggles?
     // A: Looks like I can as long as they names don't conflict
-    const [notificationsOpen, toggleNotifications] = useToggle();
-    //const [mobileMenuOpen, toggleMobileMenu] = useToggle();
+    // const [notificationsOpen, toggleNotifications] = useToggle();
+    // const [mobileMenuOpen, toggleMobileMenu] = useToggle();
     // const isOpen = ref<boolean>(false);
     // const toggleOpen = useToggle(isOpen); // RefImpl {}
     // const toggleOpen = useToggle(isOpen.value); // false
+
+    // Create some active/inactive CSS classes
+    const activeClass = ref<string>("bg-gray-900 text-white");
+    const inactiveClass = ref<string>(
+      "text-gray-300 hover:bg-gray-700 hover:text-white"
+    );
 
     const router = useRouter();
 
@@ -387,8 +404,8 @@ export default defineComponent({
       user,
       dropdownOpen,
       toggleDropdown,
-      notificationsOpen,
-      toggleNotifications,
+      activeClass,
+      inactiveClass,
     };
   },
 });

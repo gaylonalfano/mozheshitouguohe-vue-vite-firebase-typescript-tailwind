@@ -11,6 +11,8 @@ import Signup from "../views/auth/Signup.vue";
 import Login from "../views/auth/Login.vue";
 import Home from "../views/Home.vue";
 import ToggleDemo from "../views/ToggleDemo.vue";
+import Profile from "../views/Profile.vue";
+import Settings from "../views/Settings.vue";
 import UserCollections from "../views/collections/UserCollections.vue";
 
 // Creating another Route Guard for Home page for logged-in users
@@ -83,12 +85,24 @@ const routes: Array<RouteRecordRaw> = [
     name: "ToggleDemo",
     component: ToggleDemo,
   },
-  // {
-  //   path: "/collections/user",
-  //   name: "UserCollections",
-  //   component: UserCollections,
-  //   // beforeEnter: requireNoAuth,
-  // },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
+    // beforeEnter: requireNoAuth,
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: Settings,
+    // beforeEnter: requireNoAuth,
+  },
+  {
+    path: "/collections/user",
+    name: "UserCollections",
+    component: UserCollections,
+    // beforeEnter: requireNoAuth,
+  },
 ];
 
 const router = createRouter({

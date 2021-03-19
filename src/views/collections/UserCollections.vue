@@ -19,6 +19,7 @@
     <div class="pb-32 bg-gray-800">
       <nav class="bg-gray-800">
         <!-- Remove the border here if I want continuous look. Keeping for mobile menu. -->
+        <!-- Only for LARGE screens -->
         <div class="px-2 mx-auto max-w-7xl sm:px-4 lg:px-8">
           <div
             class="relative flex items-center justify-between h-16 lg:border-gray-700 lg:border-opacity-25"
@@ -34,22 +35,31 @@
               <div class="hidden lg:block lg:ml-10">
                 <div class="flex space-x-4">
                   <!-- Current: "bg-gray-900 text-white", Default: "text-white hover:bg-gray-500 hover:bg-opacity-75" -->
-                  <a
-                    href="#"
-                    class="px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-md"
+                  <router-link
+                    :to="{ name: 'Home' }"
+                    class="px-3 py-2 text-sm font-medium rounded-md"
+                    :class="[
+                      $route.name === 'Home' ? activeClass : inactiveClass,
+                    ]"
                   >
                     Dashboard
-                  </a>
+                  </router-link>
 
-                  <a
-                    href="#"
+                  <router-link
+                    :to="{ name: 'UserCollections' }"
                     class="px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:bg-opacity-75 hover:text-white rounded-md"
+                    :class="[
+                      $route.name === 'UserCollections'
+                        ? activeClass
+                        : inactiveClass,
+                    ]"
                   >
                     Collections
-                  </a>
+                  </router-link>
                 </div>
               </div>
             </div>
+            <!-- Search box -->
             <div class="flex justify-center flex-1 px-2 lg:ml-6 lg:justify-end">
               <div class="w-full max-w-lg lg:max-w-xs">
                 <label for="search" class="sr-only">Search</label>
@@ -82,9 +92,11 @@
                 </div>
               </div>
             </div>
+            <!-- Only for SMALL/MEDIUM screens -->
             <div class="flex lg:hidden">
-              <!-- Mobile menu button -->
+              <!-- Mobile menu BUTTON! -->
               <button
+                @click="toggleDropdown"
                 type="button"
                 class="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                 aria-controls="mobile-menu"
@@ -97,9 +109,12 @@
                 Heroicon name: outline/menu
 
                 Menu open: "hidden", Menu closed: "block"
+
+                NOTE: Remove existing block or hidden class!
               -->
                 <svg
-                  class="block w-6 h-6"
+                  :class="dropdownOpen ? 'hidden' : 'block'"
+                  class="w-6 h-6"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -119,9 +134,12 @@
                 Heroicon name: outline/x
 
                 Menu open: "block", Menu closed: "hidden"
+                
+                NOTE: Remove existing block or hidden class!
               -->
                 <svg
-                  class="hidden w-6 h-6"
+                  :class="dropdownOpen ? 'block' : 'hidden'"
+                  class="w-6 h-6"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -137,6 +155,7 @@
                 </svg>
               </button>
             </div>
+            <!-- Only for LARGE screen. Profile Dropdown on LARGE screen. -->
             <div class="hidden lg:block lg:ml-4">
               <div class="flex items-center">
                 <button
@@ -161,10 +180,11 @@
                   </svg>
                 </button>
 
-                <!-- Profile dropdown -->
+                <!-- Profile dropdown on LARGE screen. -->
                 <div class="relative flex-shrink-0 ml-4">
                   <div>
                     <button
+                      @click="toggleDropdown()"
                       type="button"
                       class="flex text-sm text-white bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                       id="user-menu"
@@ -175,45 +195,56 @@
                       <img
                         class="w-8 h-8 rounded-full"
                         src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixqx=CW4pSoYe68&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
+                        alt="Your avatar"
                       />
                     </button>
                   </div>
+                  <!-- Adding another div for when user clicks outside of dropdown to also close -->
+                  <!-- https://github.com/wobsoriano/v-dashboard/blob/master/src/components/Header.vue -->
+                  <div
+                    v-show="dropdownOpen"
+                    @click="toggleDropdown()"
+                    class="fixed inset-0 z-10 w-full h-full"
+                  ></div>
 
                   <!--
-                  Dropdown menu, show/hide based on menu state.
+                    Dropdown menu, show/hide based on menu state.
 
-                  Entering: "transition ease-out duration-100"
+                    Entering: "transition ease-out duration-100"
                     From: "transform opacity-0 scale-95"
                     To: "transform opacity-100 scale-100"
-                  Leaving: "transition ease-in duration-75"
+                    Leaving: "transition ease-in duration-75"
                     From: "transform opacity-100 scale-100"
                     To: "transform opacity-0 scale-95"
-                -->
+
+                    NOTE: Make this z-index LOWER from backdrop/mask!
+                    Otherwise you can't click the modal elements!
+                  -->
                   <div
-                    class="absolute right-0 w-48 py-1 mt-2 bg-white shadow-lg origin-top-right rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    v-show="dropdownOpen"
+                    class="absolute right-0 z-20 w-48 py-1 mt-2 bg-white shadow-lg origin-top-right rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none"
                     role="menu"
                     aria-orientation="vertical"
                     aria-labelledby="user-menu"
                   >
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    <router-link
+                      :to="{ name: 'Profile' }"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
                       role="menuitem"
-                      >Your Profile</a
+                      >Your Profile</router-link
                     >
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    <router-link
+                      :to="{ name: 'Settings' }"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
                       role="menuitem"
-                      >Settings</a
+                      >Settings</router-link
                     >
-                    <a
+                    <span
                       @click="handleLogout"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      role="menuitem"
-                      >Sign out</a
+                      class="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-200"
                     >
+                      Sign out
+                    </span>
                   </div>
                 </div>
               </div>
@@ -221,29 +252,24 @@
           </div>
         </div>
 
-        <!-- Mobile menu, show/hide based on menu state. -->
-        <div class="border-b border-gray-700 md:hidden" id="mobile-menu">
+        <!-- Mobile menu, show/hide based on menu state (ie. remove md:hidden). -->
+        <div
+          v-show="dropdownOpen"
+          :class="dropdownOpen ? 'lg:hidden' : 'md:hidden'"
+          class="border-b border-gray-700"
+          id="mobile-menu"
+        >
           <div class="px-2 pt-2 pb-3 space-y-1">
             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-            <a
-              href="#"
+            <router-link
+              :to="{ name: 'Home' }"
               class="block px-3 py-2 text-base font-medium text-white bg-gray-900 rounded-md"
-              >Dashboard</a
+              >Dashboard</router-link
             >
-            <a
-              href="#"
+            <router-link
+              :to="{ name: 'UserCollections' }"
               class="block px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md"
-              >Collections</a
-            >
-            <a
-              href="#"
-              class="block px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md"
-              >Projects</a
-            >
-            <a
-              href="#"
-              class="block px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md"
-              >Calendar</a
+              >Collections</router-link
             >
           </div>
           <div class="pt-4 pb-3 border-t border-gray-700">
@@ -256,9 +282,11 @@
                 />
               </div>
               <div class="ml-3">
-                <div class="text-base font-medium text-white">Tom Cook</div>
+                <div class="text-base font-medium text-white">
+                  {{ user?.displayName }}
+                </div>
                 <div class="text-sm font-medium text-gray-400">
-                  tom@example.com
+                  {{ user?.email }}
                 </div>
               </div>
               <button
@@ -284,102 +312,29 @@
               </button>
             </div>
             <div class="px-2 mt-3 space-y-1">
-              <a
-                href="#"
+              <router-link
+                :to="{ name: 'Profile' }"
                 class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700"
-                >Your Profile</a
+                >Your Profile</router-link
               >
-              <a
-                href="#"
+              <router-link
+                :to="{ name: 'Settings' }"
                 class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700"
-                >Settings</a
+                >Settings</router-link
               >
-              <a
-                href="#"
+              <!-- <router-link -->
+              <!--   class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700" -->
+              <!--   >Sign out</router-link -->
+              <!-- > -->
+              <button
+                @click="handleLogout"
                 class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700"
-                >Sign out</a
               >
+                Sign out
+              </button>
             </div>
           </div>
         </div>
-        <!-- <div class="lg:hidden" id="mobile-menu"> -->
-        <!--   <div class="px-2 pt-2 pb-3 space-y-1"> -->
-        <!--     <!-1- Current: "bg-gray-700 text-white", Default: "text-white hover:bg-gray-500 hover:bg-opacity-75" -1-> -->
-        <!--     <a -->
-        <!--       href="#" -->
-        <!--       class="block px-3 py-2 text-base font-medium text-white bg-gray-900 rounded-md" -->
-        <!--     > -->
-        <!--       Dashboard -->
-        <!--     </a> -->
-
-        <!--     <a -->
-        <!--       href="#" -->
-        <!--       class="block px-3 py-2 text-base font-medium text-white hover:bg-gray-700 hover:bg-opacity-75 rounded-md" -->
-        <!--     > -->
-        <!--       Collections -->
-        <!--     </a> -->
-        <!--   </div> -->
-        <!--   <div class="pt-4 pb-3 border-t border-gray-700"> -->
-        <!--     <div class="flex items-center px-5"> -->
-        <!--       <div class="flex-shrink-0"> -->
-        <!--         <img -->
-        <!--           class="w-10 h-10 rounded-full" -->
-        <!--           src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixqx=CW4pSoYe68&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" -->
-        <!--           alt="" -->
-        <!--         /> -->
-        <!--       </div> -->
-        <!--       <div class="ml-3"> -->
-        <!--         <div class="text-base font-medium text-white">Tom Cook</div> -->
-        <!--         <div class="text-sm font-medium text-gray-300"> -->
-        <!--           tom@example.com -->
-        <!--         </div> -->
-        <!--       </div> -->
-        <!--       <button -->
-        <!--         class="flex-shrink-0 p-1 ml-auto text-gray-200 bg-gray-600 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-600 focus:ring-white" -->
-        <!--       > -->
-        <!--         <span class="sr-only">View notifications</span> -->
-        <!--         <!-1- Heroicon name: outline/bell -1-> -->
-        <!--         <svg -->
-        <!--           class="w-6 h-6" -->
-        <!--           xmlns="http://www.w3.org/2000/svg" -->
-        <!--           fill="none" -->
-        <!--           viewBox="0 0 24 24" -->
-        <!--           stroke="currentColor" -->
-        <!--           aria-hidden="true" -->
-        <!--         > -->
-        <!--           <path -->
-        <!--             stroke-linecap="round" -->
-        <!--             stroke-linejoin="round" -->
-        <!--             stroke-width="2" -->
-        <!--             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" -->
-        <!--           /> -->
-        <!--         </svg> -->
-        <!--       </button> -->
-        <!--     </div> -->
-        <!--     <div class="px-2 mt-3 space-y-1"> -->
-        <!--       <a -->
-        <!--         href="#" -->
-        <!--         class="block px-3 py-2 text-base font-medium text-white rounded-md hover:bg-gray-700 hover:bg-opacity-75" -->
-        <!--       > -->
-        <!--         Your Profile -->
-        <!--       </a> -->
-
-        <!--       <a -->
-        <!--         href="#" -->
-        <!--         class="block px-3 py-2 text-base font-medium text-white rounded-md hover:bg-gray-700 hover:bg-opacity-75" -->
-        <!--       > -->
-        <!--         Settings -->
-        <!--       </a> -->
-
-        <!--       <a -->
-        <!--         href="#" -->
-        <!--         class="block px-3 py-2 text-base font-medium text-white rounded-md hover:bg-gray-700 hover:bg-opacity-75" -->
-        <!--       > -->
-        <!--         Sign out -->
-        <!--       </a> -->
-        <!--     </div> -->
-        <!--   </div> -->
-        <!-- </div> -->
       </nav>
       <header class="py-10">
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -403,34 +358,57 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from "vue";
+import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
-import getUser from "../composables/getUser";
-import useLogout from "../composables/useLogout";
+import getUser from "../../composables/getUser";
+import useLogout from "../../composables/useLogout";
+import useToggle from "../../composables/useToggle";
 
 export default defineComponent({
   name: "UserCollections",
   setup() {
     const { error, logout } = useLogout();
     const { user } = getUser();
-    console.log(user.value);
+    //const [value, toggle] = useToggle();
+    // NOTE Can also rename the variables if you wish
+    const [dropdownOpen, toggleDropdown] = useToggle();
+    // Q: Can you import/declare multiple useToggle() for different toggles?
+    // A: Looks like I can as long as they names don't conflict
+    // const [notificationsOpen, toggleNotifications] = useToggle();
+    // const [mobileMenuOpen, toggleMobileMenu] = useToggle();
+    // const isOpen = ref<boolean>(false);
+    // const toggleOpen = useToggle(isOpen); // RefImpl {}
+    // const toggleOpen = useToggle(isOpen.value); // false
+
+    // Create some active/inactive CSS classes
+    const activeClass = ref<string>("bg-gray-900 text-white");
+    const inactiveClass = ref<string>(
+      "text-white hover:bg-gray-500 hover:bg-opacity-75"
+    );
 
     const router = useRouter();
 
     // Handle the logout and
     async function handleLogout() {
       await logout();
-      // redirect to '/' Home page
+      // redirect to '/' Login page
       if (!error.value) {
         console.log("SUCCESS:handleLogout");
         router.push({ name: "Login" });
       }
     }
 
-    return { error, handleLogout, user };
+    return {
+      error,
+      handleLogout,
+      user,
+      dropdownOpen,
+      toggleDropdown,
+      activeClass,
+      inactiveClass,
+    };
   },
 });
 </script>
 
 <style></style>
-
