@@ -3,13 +3,22 @@
     <div class="pb-32 bg-gray-800">
       <Navbar />
       <!-- <Header /> -->
-      <Header> Dashboard </Header>
+      <Header>
+        <template v-slot:default="slotProps">
+          {{ slotProps.headerText }}
+        </template>
+      </Header>
     </div>
 
     <main class="-mt-32">
       <div class="px-4 pb-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <!-- Replace with your content -->
-        <slot />
+        <div class="px-5 py-6 bg-white rounded-lg shadow sm:px-6">
+          <div class="border-4 border-gray-200 border-dashed rounded-lg h-96">
+            <!-- This is where <router-view /> gets inserted from App.vue -->
+            <slot />
+          </div>
+        </div>
         <!-- /End replace -->
       </div>
     </main>

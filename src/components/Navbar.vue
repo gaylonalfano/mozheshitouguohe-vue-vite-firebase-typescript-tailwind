@@ -19,20 +19,20 @@
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
               <router-link
                 :to="{ name: 'Home' }"
-                class="px-3 py-2 text-sm font-medium rounded-md"
                 :class="[$route.name === 'Home' ? activeClass : inactiveClass]"
+                class="px-3 py-2 text-sm font-medium rounded-md"
               >
                 Dashboard
               </router-link>
 
               <router-link
                 :to="{ name: 'UserCollections' }"
-                class="px-3 py-2 text-sm font-medium rounded-md"
                 :class="[
                   $route.name === 'UserCollections'
                     ? activeClass
                     : inactiveClass,
                 ]"
+                class="px-3 py-2 text-sm font-medium rounded-md"
               >
                 Collections
               </router-link>
@@ -243,12 +243,16 @@
         <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
         <router-link
           :to="{ name: 'Home' }"
-          class="block px-3 py-2 text-base font-medium text-white bg-gray-900 rounded-md"
+          :class="[$route.name === 'Home' ? activeClass : inactiveClass]"
+          class="block px-3 py-2 text-base font-medium rounded-md"
           >Dashboard</router-link
         >
         <router-link
           :to="{ name: 'UserCollections' }"
-          class="block px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md"
+          :class="[
+            $route.name === 'UserCollections' ? activeClass : inactiveClass,
+          ]"
+          class="block px-3 py-2 text-base font-medium rounded-md"
           >Collections</router-link
         >
       </div>
@@ -294,12 +298,14 @@
         <div class="px-2 mt-3 space-y-1">
           <router-link
             :to="{ name: 'Profile' }"
-            class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700"
+            :class="[$route.name === 'Profile' ? activeClass : inactiveClass]"
+            class="block px-3 py-2 text-base font-medium rounded-md"
             >Your Profile</router-link
           >
           <router-link
             :to="{ name: 'Settings' }"
-            class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700"
+            :class="[$route.name === 'Settings' ? activeClass : inactiveClass]"
+            class="block px-3 py-2 text-base font-medium rounded-md"
             >Settings</router-link
           >
           <!-- <router-link -->
