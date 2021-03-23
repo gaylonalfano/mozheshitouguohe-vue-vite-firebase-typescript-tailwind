@@ -73,12 +73,14 @@ const routes: Array<RouteRecordRaw> = [
     name: "Login",
     component: Login,
     // beforeEnter: requireNoAuth,
+    meta: { transition: "slide-left" },
   },
   {
     path: "/signup",
     name: "Signup",
     component: Signup,
     // beforeEnter: requireNoAuth,
+    meta: { transition: "slide-right" },
   },
   {
     path: "/toggle",
@@ -89,19 +91,16 @@ const routes: Array<RouteRecordRaw> = [
     path: "/profile",
     name: "Profile",
     component: Profile,
-    // beforeEnter: requireNoAuth,
   },
   {
     path: "/settings",
     name: "Settings",
     component: Settings,
-    // beforeEnter: requireNoAuth,
   },
   {
     path: "/collections/user",
     name: "UserCollections",
     component: UserCollections,
-    // beforeEnter: requireNoAuth,
   },
 ];
 
